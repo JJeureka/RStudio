@@ -35,3 +35,18 @@ above <- function(y,n = 10) {
   use <- y > n
   y[use]
 }
+
+
+
+
+make.power <- function(n) {
+  pow <- function(x) 
+    {x^n}
+  pow
+}
+
+cube <-make.power(3)
+
+cube(4)
+
+#This whole setup will allow you to cube items, cube(4) will equal 64, using a function within a function
