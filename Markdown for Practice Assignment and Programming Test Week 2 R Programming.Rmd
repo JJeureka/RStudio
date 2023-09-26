@@ -1,0 +1,287 @@
+---
+title: "Practice_Assignment_R_Programming"
+author: "John Jurica"
+date: "2023-09-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+
+
+# https://github.com/rdpeng/practice_assignment/blob/master/practice_assignment.rmd 
+
+#The first 2 lines of this command didn't work, so I am manually downloading and trying from there
+
+dataset_url <- "http://s3.amazonaws.com/practice_assignment/diet_data.zip"
+download.file(dataset_url, "diet_data.zip")
+
+#The command below should still work
+
+```r {, echo = TRUE}
+unzip("diet_data.zip", exdir = "diet_data")
+```
+
+
+#shows the diet_data folder
+
+list.files()
+
+# shows the five .csv files
+
+list.files("diet_data")
+
+# sets andy as a file we're reading... notice that we're still in a working directory a parent above where we're looking
+
+```{r}
+andy <- read.csv("diet_data/Andy.csv")
+```
+
+#gives us the header names
+
+```{r, echo = TRUE}
+head(andy)
+```
+
+# see how many rows are in one of the columns
+# Both the commands below work, one is looking at the dataset, which is andy. The first
+# specifies that it's the column with the header Weight. The 2nd specifies that it's
+# the column with a blank for the row cuz we're not looking at rows, then the 3rd column
+
+```{r}
+length(andy$Weight)
+length(andy[ , 3])
+```
+
+
+Some other ways to get yourself some useful data
+
+dim(andy)
+
+#gets you some other helpful info
+
+```{r}
+str(andy)
+summary(andy)
+names(andy)
+```
+
+Let's take the output of `list.files()` and store it:
+```{r}
+files <- list.files("diet_data")
+files
+```
+
+
+
+Let's take a quick look at John.csv:
+```{r error=TRUE}
+head(read.csv(files[3]))
+```
+
+
+
+Woah, what happened?  Well, John.csv is sitting inside the diet_data folder.  We just tried to run the equivalent of `read.csv("John.csv")` and R correctly told us that there isn't a file called John.csv in our working directory.  To fix this, we need to append the directory to the beginning of the file name.
+
+One approach would be to use `paste()` or `sprintf()`.  However, if you go back to the help file for `list.files()`, you'll see that there is an argument called `full.names` that will append (technically prepend) the path to the file name for us.
+
+
+files_full <- list.files("diet_data", full.names=TRUE)
+files_full
+
+Now we can read the individual files from here
+head(read.csv(files_full[3]))
+
+
+Success!  So what if we wanted to create one big data frame with everybody's data in it?  We'd do that with rbind and a loop.  Let's start with rbind:
+
+THIS ASSUMES YOU HAVE ALREADY ADDED the file andy
+
+```{r}
+andy_david <- rbind(andy, read.csv(files_full[2]))
+```
+
+Success!  So what if we wanted to create one big data frame with everybody's data in it?  We'd do that with rbind and a loop.  Let's start with rbind:
+
+```{r}
+andy_david <- rbind(andy, read.csv(files_full[2]))
+```
+
+This works if you don't already have a dataframe for andy
+
+david_john <- rbind(read.csv(files_full[2]), read.csv(files_full[3]))
+
+Trying on my own to create a sum total here YIKES
+
+total <- function()
+
+
+How do I get these 2 to go together
+
+Need an empty data frame
+dat <- data.frame()
+
+
+for (i in 1:5) {
+dat <- rbind(dat, read.csv(files_full[i])) 
+}  
+
+for (i in 1:5) {
+        dat <- rbind(dat, read.csv(files_full[i]))
+}
+
+dat <- data.frame()
+for (i in 1:5) {
+        dat <- rbind(dat, read.csv(files_full[i]))
+}
+
+total <- function(y){
+for (i in seq_along(y)) {
+        dat <- rbind(dat, read.csv(y[i]))
+}
+dat
+}
+
+Cool.  We now have a data frame called 'dat' with all of our data in it.  Out of curiousity, what would happen if we had put `dat <- data.frame()` inside of the loop?  Let's see:
+
+```{r}
+for (i in 1:5) {
+        dat2 <- data.frame()
+        dat2 <- rbind(dat2, read.csv(files_full[i]))
+}
+str(dat2)
+head(dat2)
+```
+
+Because we put `dat2 <- data.frame()` inside of the loop, `dat2` is being rewritten with each pass of the loop.  So we only end up with the data from the last file in our list.
+
+
+median(dat)
+
+
+
+
+total_median_weight_day <- function(y,z){
+     for (i in seq_along(y)) {
+         dat <- rbind(dat, read.csv(y[i]))
+     }
+     hmm <- dat[which(dat[, "Day"] == z),]
+     dis <- median(hmm$Weight, na.rm = TRUE)
+     dis
+ }
+
+
+
+
+total_data_day <- function(y,z){
+     for (i in seq_along(y)) {
+         dat <- rbind(dat, read.csv(y[i]))
+     }
+     hmm <- dat[which(dat[, "Day"] == z),]
+     hmm
+ }
+
+
+Gets you the info for a specific day
+
+dat_30 <- dat[which(dat[, "Day"] == 30),]
+
+
+
+
+
+
+
+
+
+
+
+
+get_directory <- list.files("specdata", full.names=TRUE)
+
+
+combine <- for (i in 1:332)) {
+dat <- rbind(dat, read.csv(get_directory[i]))
+}
+
+
+sub <- data.frame()
+
+full_data_set <- for (i in seq_along(get_directory)) {
+        sub <- rbind(sub, read.csv(get_directory[i]))
+}
+
+
+
+sub_23 <- sub[which(sub[, "ID"] == 23),]
+
+
+pollutant <- function(directory) {
+for (i in seq_along(directory)) {
+hup <- rbind(hup, read.csv(directory[i]))
+}
+
+
+pollutant <- function(directory, pollutant, id) {
+for (i in seq_along(directory)) {
+hup <- rbind(hup, read.csv(directory[i]))
+}
+hmm <- hup[which(hup[, "ID"] %in% id),]
+dis <- mean(hmm[,"pollutant"], na.RM = TRUE)
+dis
+}
+
+
+
+
+
+
+
+
+Last try for the actual homework - I am trying to add an argument that lets me pick everything in a column.
+And I am trying to change things to fit my parameters
+
+
+total_mean_nitrate_id <- function(y,z){
+     for (i in seq_along(y)) {
+         dat <- rbind(dat, read.csv(y[i]))
+     }
+     hmm <- dat[which(dat[, "ID"] == z),]
+     dis <- mean(hmm$nitrate, na.rm = TRUE)
+     dis
+ }
+
+
+This is so goddamn close to the answer for 1
+
+ total_mean_pollutant_id <- function(directory,pollutant,id){
+     for (i in seq_along(directory)) {
+         dat <- rbind(dat, read.csv(directory[i]))
+     }
+     hmm <- dat[which(dat[, "ID"] %in% id),]
+     dis <- mean(hmm[,pollutant], na.rm = TRUE)
+     dis
+ }
+
+
+This is so goddamn close to the answer for 2
+
+ total_obs <- function(directory,id){
+     for (i in seq_along(directory)) {
+         dat <- rbind(dat, read.csv(directory[i]))
+     }
+     hmm <- dat[which(dat[, "ID"] %in% id),]
+     dis <- sum(complete.cases(hmm$nitrate,hmm$sulfate))
+     dis
+ }
+
