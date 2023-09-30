@@ -1,0 +1,27 @@
+---
+title: "Learning"
+author: "John Jurica"
+date: "2023-09-29"
+output: html_document
+---
+
+### R Markdown
+
+
+## gunna wanna load packages first. Note that if you haven't installed these, you're gunna need to do that first
+
+library(stats)
+
+```{r loading packages}
+library(tidyverse)
+
+```
+
+Make a link this way
+
+just go ahead and click here[link](https://www.google.com)
+
+Or even an image
+
+![Giroux!](https://jjeureka.github.io/Giroux-Webpage/images/sleepyjooj.png)
+

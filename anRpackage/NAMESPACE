@@ -1,0 +1,3 @@
+export("best_trimmed_flavors_df", "colnameToNumber", "dat", "dat2", "data", "files_full", "flavors_df",
+       "flavors_dr", "i", "question_2", "question_2_chat", "smoo", "testing_which_with_letters",
+       "total", "total_median_weight_day", "total_test", "trimmed_flavors_df")
