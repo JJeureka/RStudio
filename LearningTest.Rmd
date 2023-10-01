@@ -25,3 +25,32 @@ Or even an image
 
 ![Giroux!](https://jjeureka.github.io/Giroux-Webpage/images/sleepyjooj.png)
 
+From Coursera programming with R stuff
+
+
+```{r ggplot for penguin data}
+
+library(palmerpenguins)
+library(ggplot2)
+
+data(penguins)
+
+view(penguins)
+```
+
+
+```{r make plot itself}
+
+ggplot(data = penguins) +
+  geom_point(aes(x = flipper_length_mm, y = body_mass_g))
+
+```
+
+```{r add a regression line in here}
+#note we moved the aes() info into the top line so that it applies to all the functions below
+
+ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE , color = "#F74902")
+```
+
