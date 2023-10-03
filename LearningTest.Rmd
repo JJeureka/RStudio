@@ -33,6 +33,7 @@ From Coursera programming with R stuff
 library(palmerpenguins)
 library(ggplot2)
 
+
 data(penguins)
 
 view(penguins)
