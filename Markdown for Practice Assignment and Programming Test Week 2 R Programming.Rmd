@@ -312,6 +312,8 @@ total_mean_nitrate_id <- function(y,z){
 
 This is the answer for question 1
 
+```{r} 
+
 list_files_now <- function(directory,pollutant, id) {
      
 a_directory <- list.files(directory, full.names=TRUE)
@@ -335,98 +337,12 @@ print(final)
 
 }
 
-
-Adapting for question 2
-
-question_2 <- function(directory, id) {
-     
-a_directory <- list.files(directory, full.names=TRUE)
-
-print(a_directory)
-
-needed_files <- a_directory[id]
-
-print(needed_files)
-
-smoo <- data.frame()
-for (i in seq_along(needed_files)) {
-  smoo <- rbind(smoo, read.csv(needed_files[i]))
-  
-}
+list_files_now("specdata", "sulfate", 1:10)
+```
 
 
-
-
-
-
-
-print(head(smoot))
-
-print(nrow(smoo))
-print(head(smoo))
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-print(complete_observations)
-
-}
-
-
- total_mean_pollutant_id <- function(directory,pollutant,id){
-     
-a_directory <- list.files(directory, full.names=TRUE)
-
-needed_files <- a_directory[id]
-print(needed_files)
-     
-     for (i in seq_along(needed_files)) {
-         dat <- rbind(dat, read.csv(needed_files[i]))
-     }
-     hmm <- dat[which(dat$ID %in% id),]
-     dis <- mean(hmm[,pollutant], na.rm = TRUE)
-     dis
- }
-
-
-
-Trying the more correct approach to answer 1
-
-checking to see if the 1st part works
-
-just_list<- function(directory){
-a_directory <- list.files(directory, full.names=TRUE)
-a_directory
-
-
-} 
-
-empty_df_and_subset <- function(directory,id){
-a_directory <- list.files(directory, full.names=TRUE)
-
-empty_df <- data.frame()
-
-directory <- dir(a_directory)
-directory
-
-
-
-} 
-
-
-
-
-
+This is also an answer for question 1
+```{r}
  total_mean_pollutant_id <- function(directory,pollutant,id){
      #get a list of the directory
     get_directory <- list.files(directory, full.names=TRUE)
@@ -445,47 +361,101 @@ directory
      dis <- mean(dat[,pollutant], na.rm = TRUE)
      dis
  }
+```
 
+Trying again to figure out question 2
 
+First part can be the same as question 1
 
-This is so goddamn close to the answer for 2
-
- total_obs <- function(directory,id){
-     for (i in seq_along(directory)) {
-         dat <- rbind(dat, read.csv(directory[i]))
-     }
-     hmm <- dat[which(dat[, "ID"] %in% id),]
+get_id_and_nobs <- function(directory,id) {
      
-     #We're good up to this point
-     #Now we need to create a data frame that groups by ID
-     #And only includes complete cases
-     
-     dis <- cbind("id" = hmm[, "ID"])
-     dis
- }
+a_directory <- list.files(directory, full.names=TRUE)
+
+print(a_directory)
+
+needed_files <- a_directory[id]
+
+print(needed_files)
+
+smoo <- data.frame()
+for (i in seq_along(needed_files)) {
+  smoo <- rbind(smoo, read.csv(needed_files[i]))
+  final <- smoo %>%
+        group_by(ID) %>%
+        summarize(CompleteRows = sum(complete.cases(.)))
+
+}
+print(head(smoo))
+
+final
+
+}
 
 
-blehh <- for (i in seq_along(full_data_set)) {
-         dat <- rbind(dot, read.csv(full_data_set[i]))
-         print(nrow(dat))}
+get_id_and_nobs1 <- function(directory, id) {
+    a_directory <- list.files(directory, full.names = TRUE)
+    needed_files <- a_directory[id]
+    
+    # Initialize an empty data frame for results
+    results <- data.frame()
+    
+    for (i in seq_along(needed_files)) {
+        data <- read.csv(needed_files[i])
+        complete_cases <- data %>% 
+            group_by(ID) %>% 
+            summarize(CompleteRows = sum(complete.cases(.)))
+        results <- rbind(results, complete_cases)
+    }
+    
+    return(results)
+}
+
+```{r}
+get_id_and_nobs2 <- function(directory, id) {
+    a_directory <- list.files(directory, full.names = TRUE)
+    needed_files <- a_directory[id]
+    
+    # Initialize an empty data frame for results
+    results <- tibble()
+    
+    for (i in seq_along(needed_files)) {
+        data <- read.csv(needed_files[i])
+        complete_cases <- data %>% 
+            group_by(ID) %>% 
+            summarize(nobs = sum(complete.cases(.)))
+        results <- rbind(results, complete_cases)
+    }
+    
+    return(results)
+}
+```
 
 
-This is so goddamn close to the answer for 2
+Part 3
 
- total_obs <- function(directory,id){
-     dot <- data.frame()
-     for (i in directory[1:2]) {
-         dat <- rbind(dot, read.csv(directory[i]))
-     }
-     print(nrow(dat))
-     hmm <- dat[which(dat[, "ID"] %in% id),]
-     print(nrow(hmm))
-     
-     #We're good up to this point
-     #Now we need to create a data frame that groups by ID
-     #And only includes complete cases
-     
- }
+get_cor_threshold <- function(directory, id, threshold) {
+    a_directory <- list.files(directory, full.names = TRUE)
+    needed_files <- a_directory[id]
+    
+    # Initialize an empty data frame for results
+    results <- tibble()
+
+    for (i in seq_along(needed_files)) {
+        data <- read.csv(needed_files[i])
+        complete_cases <- data %>%
+            group_by(ID) %>%
+            summarize(nobs = sum(complete.cases(.)))
+        results <- rbind(results, complete_cases)
+        
+    }
+    
+    return(results)
+}
+
+
+
+
+
 
 
 
